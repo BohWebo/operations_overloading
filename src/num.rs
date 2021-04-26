@@ -23,3 +23,7 @@ impl Num for i32 {}
 impl Num for u64 {}
 
 impl Num for i64 {}
+
+impl Num for f32 {}
+
+impl Num for f64 {}

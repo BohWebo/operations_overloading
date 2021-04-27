@@ -1,13 +1,6 @@
 use std::ops::{Add, Sub, Div, Mul, Rem, Deref, DerefMut};
 use crate::num::{Num};
-
-enum Operations {
-    Add,
-    Subtract,
-    Multiply,
-    Division,
-    Remainder,
-}
+use crate::utils::{Operations, elementwise_operation};
 
 /*TODO:
     ?add the ability to do bitwise operations
@@ -15,7 +8,7 @@ enum Operations {
 */
 #[derive(Debug)]
 pub struct List<T: Num> {
-    storage: Vec<T>,
+    storage: Vec<T>
 }
 
 impl<T: Num> List<T> {
@@ -26,15 +19,15 @@ impl<T: Num> List<T> {
     }
 }
 
-impl<'self, T: Num> Deref for List<T> {
+impl<T: Num> Deref for List<T> {
     type Target = Vec<T>;
-    fn deref(&self) -> &'self Self::Target {
+    fn deref(&self) -> &Self::Target {
         &self.storage
     }
 }
 
-impl<'self, T: Num> DerefMut for List<T> {
-    fn deref_mut(&mut self) -> &'self mut Self::Target {
+impl<T: Num> DerefMut for List<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.storage
     }
 }
@@ -195,59 +188,5 @@ impl From<List<f32>> for Vec<f32> {
 impl From<List<f64>> for Vec<f64> {
     fn from(list: List<f64>) -> Self {
         list.storage
-    }
-}
-
-fn do_operation<T: Num>(x: T, y: T, op: &Operations) -> T {
-    match op {
-        &Operations::Add => x + y,
-        &Operations::Subtract => x - y,
-        &Operations::Multiply => x * y,
-        &Operations::Division => x / y,
-        &Operations::Remainder => x % y,
-    }
-}
-
-fn elementwise_operation<T: Num>(vec1: &Vec<T>, vec2: &Vec<T>, operation: Operations) -> Vec<T> {
-    if vec1.len() == vec2.len() {
-        let mut output = Vec::with_capacity(vec1.capacity());
-
-        for (index, item) in vec1.iter().enumerate() {
-            let item1 = *item;
-            let item2 = vec2[index];
-
-            let result = do_operation(item1, item2, &operation);
-
-            output.push(result);
-        }
-
-        output
-    } else {
-        let (smaller_vec, largest_vec) = if vec1.len() > vec2.len() {
-            (vec2, vec1)
-        } else {
-            (vec1, vec2)
-        };
-
-
-        let mut output = Vec::with_capacity(largest_vec.capacity());
-        let mut smaller_vec_index: usize = 0;
-
-        for item in largest_vec.iter() {
-            let item1 = *item;
-            let item2 = smaller_vec[smaller_vec_index];
-
-            let result = do_operation(item1, item2, &operation);
-
-            output.push(result);
-
-            if smaller_vec_index == smaller_vec.len() - 1 {
-                smaller_vec_index = 0;
-            } else {
-                smaller_vec_index += 1;
-            }
-        }
-
-        output
     }
 }

@@ -17,11 +17,41 @@ pub fn elementwise_operation<T: Num>(vec1: &Vec<T>, vec2: &Vec<T>, operation: Op
 
 fn do_operation<T: Num>(x: T, y: T, op: &Operations) -> T {
     match op {
-        &Operations::Add => x + y,
-        &Operations::Subtract => x - y,
-        &Operations::Multiply => x * y,
-        &Operations::Division => x / y,
-        &Operations::Remainder => x % y,
+        &Operations::Add => {
+            let result = <T as Num>::safe_add(x, y);
+            match result {
+                Some(value) => value,
+                None => T::default()
+            }
+        },
+        &Operations::Subtract => {
+            let result = <T as Num>::safe_sub(x, y);
+            match result {
+                Some(value) => value,
+                None => T::default()
+            }
+        },
+        &Operations::Multiply => {
+            let result = <T as Num>::safe_mul(x, y);
+            match result {
+                Some(value) => value,
+                None => T::default()
+            }
+        },
+        &Operations::Remainder => {
+            let result = <T as Num>::safe_rem(x, y);
+            match result {
+                Some(value) => value,
+                None => T::default()
+            }
+        },
+        &Operations::Division => {
+            let result = <T as Num>::safe_div(x, y);
+            match result {
+                Some(value) => value,
+                None => T::default()
+            }
+        },
     }
 }
 
